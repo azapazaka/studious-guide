@@ -16,7 +16,7 @@
         <div class="space-y-4">
             <div>
                 <label class="block text-xs text-gray-500 mb-1 ml-1 uppercase">Email</label>
-                <input type="email" id="email" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl focus:outline-none focus:border-indigo-500 transition" placeholder="name@example.com">
+                <input type="email" id="email" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl focus:outline-none focus:border-indigo-500 transition" placeholder="test@test.com">
             </div>
             <div>
                 <label class="block text-xs text-gray-500 mb-1 ml-1 uppercase">Пароль</label>
@@ -28,7 +28,7 @@
             </button>
         </div>
         
-        <p id="errorMsg" class="text-red-500 text-xs mt-4 text-center hidden italic">Ошибка входа</p>
+        <p id="errorMsg" class="text-red-500 text-xs mt-4 text-center hidden italic"></p>
     </div>
 
     <div id="welcomeScreen" class="hidden text-center animate-bounce">
@@ -37,7 +37,7 @@
     </div>
 
     <script>
-        // 1. Конфигурация
+        // Твои настройки Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBMsy_TlS5Z3uABWerMGYcfb3QyMZ6x8bY",
             authDomain: "hackathon-6323a.firebaseapp.com",
@@ -47,7 +47,7 @@
             appId: "1:1098870355380:web:9dbc57a3ee1"
         };
 
-        // 2. Инициализация (теперь firebase уже загружен из скриптов выше)
+        // Инициализация
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
@@ -61,10 +61,12 @@
             const pass = document.getElementById('pass').value;
 
             error.classList.add('hidden');
+            btn.innerText = "Загрузка...";
+            btn.disabled = true;
 
-            // 3. Логика входа
             auth.signInWithEmailAndPassword(email, pass)
                 .then((userCredential) => {
+                    // Успех!
                     form.classList.add('opacity-0', 'scale-90');
                     setTimeout(() => {
                         form.classList.add('hidden');
@@ -72,8 +74,12 @@
                     }, 500);
                 })
                 .catch((err) => {
-                    console.error(err.code);
-                    error.textContent = "Ошибка: " + err.message;
+                    // Ошибка
+                    console.error("Код ошибки:", err.code);
+                    btn.innerText = "Войти";
+                    btn.disabled = false;
+                    
+                    error.innerText = "Ошибка: " + err.message;
                     error.classList.remove('hidden');
                     
                     form.classList.add('animate-pulse');
