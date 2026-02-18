@@ -33,30 +33,57 @@
         <p class="text-indigo-400">Доступ разрешен для Azapazaka</p>
     </div>
 
-    <script>
-        const btn = document.getElementById('signInBtn');
-        const form = document.getElementById('loginForm');
-        const welcome = document.getElementById('welcomeScreen');
-        const error = document.getElementById('errorMsg');
+<script>
+  // 1. Твоя конфигурация из Firebase Console
+  const firebaseConfig = {
+    apiKey: "AIzaSyBMsy_TlS5Z3uABWerMGYcfb3QyMZ6x8bY",
+    authDomain: "hackathon-6323a.firebaseapp.com",
+    projectId: "hackathon-6323a",
+    storageBucket: "hackathon-6323a.firebasestorage.app",
+    messagingSenderId: "1098870355380",
+    appId: "1:1098870355380:web:9dbc57a3ee1"
+  };
 
-        btn.addEventListener('click', () => {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
+  // 2. Инициализация
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
 
-            // Имитация проверки (логика "на коленке")
-            if (email === "admin@test.com" && pass === "1234") {
-                form.classList.add('opacity-0', 'scale-90');
-                setTimeout(() => {
-                    form.classList.add('hidden');
-                    welcome.classList.remove('hidden');
-                }, 500);
-            } else {
-                error.classList.remove('hidden');
-                // Тряска формы при ошибке
-                form.classList.add('animate-pulse');
-                setTimeout(() => form.classList.remove('animate-pulse'), 500);
-            }
-        });
+  // Элементы интерфейса
+  const btn = document.getElementById('signInBtn');
+  const form = document.getElementById('loginForm');
+  const welcome = document.getElementById('welcomeScreen');
+  const error = document.getElementById('errorMsg');
+
+  btn.addEventListener('click', () => {
+    const email = document.getElementById('email').value;
+    const pass = document.getElementById('pass').value;
+
+    // Сбрасываем ошибку перед новой попыткой
+    error.classList.add('hidden');
+
+    // 3. Реальная авторизация через Firebase
+    auth.signInWithEmailAndPassword(email, pass)
+      .then((userCredential) => {
+        // Успешный вход
+        form.classList.add('opacity-0', 'scale-90');
+        setTimeout(() => {
+          form.classList.add('hidden');
+          welcome.classList.remove('hidden');
+        }, 500);
+      })
+      .catch((err) => {
+        // Ошибка (неверный пароль, нет пользователя и т.д.)
+        console.error(err.message);
+        error.textContent = "Ошибка: " + err.message; // Показываем текст ошибки от Firebase
+        error.classList.remove('hidden');
+        
+        // Визуальный эффект тряски
+        form.classList.add('animate-pulse');
+        setTimeout(() => form.classList.remove('animate-pulse'), 500);
+      });
+  });
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     </script>
 </body>
 </html>
